@@ -4,7 +4,7 @@ import "testing"
 
 func TestNewSet(t *testing.T) {
 	t.Run("empty set", func(t *testing.T) {
-		s := NewSet[int]()
+		s := NewSet[int](true)
 		if s.Size() != 0 {
 			t.Errorf("expected empty set, got size %d", s.Size())
 		}
@@ -15,7 +15,7 @@ func TestNewSet(t *testing.T) {
 
 	t.Run("with items", func(t *testing.T) {
 		items := []int{1, 2, 3}
-		s := NewSet(items...)
+		s := NewSet(true, items...)
 		if s.Size() != len(items) {
 			t.Errorf("expected size %d, got %d", len(items), s.Size())
 		}
@@ -27,7 +27,7 @@ func TestNewSet(t *testing.T) {
 	})
 
 	t.Run("with duplicate items", func(t *testing.T) {
-		s := NewSet(1, 2, 2, 3, 3, 3)
+		s := NewSet(true, 1, 2, 2, 3, 3, 3)
 		if s.Size() != 3 {
 			t.Errorf("expected size 3, got %d", s.Size())
 		}
@@ -41,21 +41,21 @@ func TestNewSet(t *testing.T) {
 
 func TestSet_Contains(t *testing.T) {
 	t.Run("existing item", func(t *testing.T) {
-		s := NewSet(1, 2, 3)
+		s := NewSet(true, 1, 2, 3)
 		if !s.Contains(2) {
 			t.Errorf("expected set to contain 2")
 		}
 	})
 
 	t.Run("non-existing item", func(t *testing.T) {
-		s := NewSet(1, 2, 3)
+		s := NewSet(true, 1, 2, 3)
 		if s.Contains(4) {
 			t.Errorf("expected set to not contain 4")
 		}
 	})
 
 	t.Run("empty set", func(t *testing.T) {
-		s := NewSet[int]()
+		s := NewSet[int](true)
 		if s.Contains(1) {
 			t.Errorf("expected empty set to not contain any items")
 		}
@@ -64,7 +64,7 @@ func TestSet_Contains(t *testing.T) {
 
 func TestSet_Insert(t *testing.T) {
 	t.Run("insert new item", func(t *testing.T) {
-		s := NewSet[int]()
+		s := NewSet[int](true)
 		s.Insert(1)
 		if !s.Contains(1) {
 			t.Errorf("expected set to contain 1 after insertion")
@@ -75,7 +75,7 @@ func TestSet_Insert(t *testing.T) {
 	})
 
 	t.Run("insert existing item", func(t *testing.T) {
-		s := NewSet(1, 2, 3)
+		s := NewSet(true, 1, 2, 3)
 		initialSize := s.Size()
 		s.Insert(2)
 		if s.Size() != initialSize {
@@ -87,7 +87,7 @@ func TestSet_Insert(t *testing.T) {
 	})
 
 	t.Run("multiple inserts", func(t *testing.T) {
-		s := NewSet[int]()
+		s := NewSet[int](true)
 		items := []int{1, 2, 3, 4, 5}
 		for _, item := range items {
 			s.Insert(item)
@@ -106,7 +106,7 @@ func TestSet_Insert(t *testing.T) {
 func TestSet_Remove(t *testing.T) {
 	t.Run("remove existing item", func(t *testing.T) {
 		items := []int{3, 4, 5, 6, 7}
-		s := NewSet(items...)
+		s := NewSet(true, items...)
 
 		// Ensure the set contains some items
 		if s.Size() != len(items) {
@@ -132,7 +132,7 @@ func TestSet_Remove(t *testing.T) {
 
 	t.Run("try to remove a non-existing item", func(t *testing.T) {
 		items := []int{3, 4, 5, 6, 7}
-		s := NewSet(items...)
+		s := NewSet(true, items...)
 
 		// Ensure the set contains some items
 		if s.Size() != len(items) {
@@ -160,7 +160,7 @@ func TestSet_Remove(t *testing.T) {
 
 func TestSet_Size(t *testing.T) {
 	t.Run("empty set", func(t *testing.T) {
-		s := NewSet[int]()
+		s := NewSet[int](true)
 		if s.Size() != 0 {
 			t.Errorf("expected size 0, got %d", s.Size())
 		}
@@ -168,14 +168,14 @@ func TestSet_Size(t *testing.T) {
 
 	t.Run("with some items", func(t *testing.T) {
 		items := []int{3, 4, 5}
-		s := NewSet(items...)
+		s := NewSet(true, items...)
 		if s.Size() != len(items) {
 			t.Fatalf("expected size: %d, actual size: %d", len(items), s.Size())
 		}
 	})
 
 	t.Run("after modifications", func(t *testing.T) {
-		s := NewSet(1, 2, 3)
+		s := NewSet(true, 1, 2, 3)
 		if s.Size() != 3 {
 			t.Errorf("expected initial size 3, got %d", s.Size())
 		}
@@ -192,14 +192,14 @@ func TestSet_Size(t *testing.T) {
 
 func TestSet_IsEmpty(t *testing.T) {
 	t.Run("empty set", func(t *testing.T) {
-		s := NewSet[int]()
+		s := NewSet[int](true)
 		if !s.IsEmpty() {
 			t.Errorf("set should be empty, but it's not")
 		}
 	})
 
 	t.Run("non-empty set", func(t *testing.T) {
-		s := NewSet(3, 4, 5)
+		s := NewSet(true, 3, 4, 5)
 		if s.IsEmpty() {
 			t.Errorf("set should be non-empty, but it's not")
 		}
@@ -208,7 +208,7 @@ func TestSet_IsEmpty(t *testing.T) {
 
 func TestSet_Clear(t *testing.T) {
 	t.Run("clear empty set", func(t *testing.T) {
-		s := NewSet[int]()
+		s := NewSet[int](true)
 		s.Clear()
 		if !s.IsEmpty() {
 			t.Errorf("expected set to remain empty after clear")
@@ -220,7 +220,7 @@ func TestSet_Clear(t *testing.T) {
 
 	t.Run("clear non-empty set", func(t *testing.T) {
 		items := []int{3, 4, 5}
-		s := NewSet(items...)
+		s := NewSet(true, items...)
 		if s.IsEmpty() || s.Size() != len(items) {
 			t.Fatalf("expected size: %d, actual size: %d", len(items), s.Size())
 		}
@@ -238,7 +238,7 @@ func TestSet_Clear(t *testing.T) {
 
 func TestSet_ToSlice(t *testing.T) {
 	t.Run("empty set", func(t *testing.T) {
-		s := NewSet[int]()
+		s := NewSet[int](true)
 		slice := s.ToSlice()
 		if len(slice) != 0 {
 			t.Errorf("expected empty slice, got length %d", len(slice))
@@ -246,7 +246,7 @@ func TestSet_ToSlice(t *testing.T) {
 	})
 
 	t.Run("single item", func(t *testing.T) {
-		s := NewSet(42)
+		s := NewSet(true, 42)
 		slice := s.ToSlice()
 		if len(slice) != 1 {
 			t.Errorf("expected slice length 1, got %d", len(slice))
@@ -258,7 +258,7 @@ func TestSet_ToSlice(t *testing.T) {
 
 	t.Run("multiple items", func(t *testing.T) {
 		items := []int{1, 2, 3, 4, 5}
-		s := NewSet(items...)
+		s := NewSet(true, items...)
 		slice := s.ToSlice()
 
 		if len(slice) != len(items) {
@@ -279,7 +279,7 @@ func TestSet_ToSlice(t *testing.T) {
 	})
 
 	t.Run("after modifications", func(t *testing.T) {
-		s := NewSet(1, 2, 3)
+		s := NewSet(true, 1, 2, 3)
 		s.Insert(4)
 		s.Remove(2)
 
@@ -308,7 +308,7 @@ func TestSet_ToSlice(t *testing.T) {
 	})
 
 	t.Run("slice independence", func(t *testing.T) {
-		s := NewSet(1, 2, 3)
+		s := NewSet(true, 1, 2, 3)
 		slice := s.ToSlice()
 
 		// Modify the returned slice
