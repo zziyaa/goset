@@ -4,7 +4,7 @@ type ThreadUnsafeSet[T comparable] struct {
 	data map[T]struct{}
 }
 
-// newThreadUnsafeSet initializes and returns a new thread unsafe set with the given items
+// newThreadUnsafeSet initializes and returns a new thread-unsafe set with the given items
 func newThreadUnsafeSet[T comparable](items ...T) *ThreadUnsafeSet[T] {
 	data := make(map[T]struct{}, len(items))
 	for _, item := range items {

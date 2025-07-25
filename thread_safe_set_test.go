@@ -2,9 +2,9 @@ package goset
 
 import "testing"
 
-func TestNewThreadUnsafeSet(t *testing.T) {
+func TestNewThreadSafeSet(t *testing.T) {
 	t.Run("empty set", func(t *testing.T) {
-		s := newThreadUnsafeSet[int]()
+		s := newThreadSafeSet[int]()
 		if s.Size() != 0 {
 			t.Errorf("expected empty set, got size %d", s.Size())
 		}
@@ -15,7 +15,7 @@ func TestNewThreadUnsafeSet(t *testing.T) {
 
 	t.Run("with items", func(t *testing.T) {
 		items := []int{1, 2, 3}
-		s := newThreadUnsafeSet(items...)
+		s := newThreadSafeSet(items...)
 		if s.Size() != len(items) {
 			t.Errorf("expected size %d, got %d", len(items), s.Size())
 		}
@@ -27,7 +27,7 @@ func TestNewThreadUnsafeSet(t *testing.T) {
 	})
 
 	t.Run("with duplicate items", func(t *testing.T) {
-		s := newThreadUnsafeSet(1, 2, 2, 3, 3, 3)
+		s := newThreadSafeSet(1, 2, 2, 3, 3, 3)
 		if s.Size() != 3 {
 			t.Errorf("expected size 3, got %d", s.Size())
 		}
@@ -39,32 +39,32 @@ func TestNewThreadUnsafeSet(t *testing.T) {
 	})
 }
 
-func TestThreadUnsafeSet_Contains(t *testing.T) {
+func TestThreadSafeSet_Contains(t *testing.T) {
 	t.Run("existing item", func(t *testing.T) {
-		s := newThreadUnsafeSet(1, 2, 3)
+		s := newThreadSafeSet(1, 2, 3)
 		if !s.Contains(2) {
 			t.Errorf("expected set to contain 2")
 		}
 	})
 
 	t.Run("non-existing item", func(t *testing.T) {
-		s := newThreadUnsafeSet(1, 2, 3)
+		s := newThreadSafeSet(1, 2, 3)
 		if s.Contains(4) {
 			t.Errorf("expected set to not contain 4")
 		}
 	})
 
 	t.Run("empty set", func(t *testing.T) {
-		s := newThreadUnsafeSet[int]()
+		s := newThreadSafeSet[int]()
 		if s.Contains(1) {
 			t.Errorf("expected empty set to not contain any items")
 		}
 	})
 }
 
-func TestThreadUnsafeSet_Insert(t *testing.T) {
+func TestThreadSafeSet_Insert(t *testing.T) {
 	t.Run("insert new item", func(t *testing.T) {
-		s := newThreadUnsafeSet[int]()
+		s := newThreadSafeSet[int]()
 		s.Insert(1)
 		if !s.Contains(1) {
 			t.Errorf("expected set to contain 1 after insertion")
@@ -75,7 +75,7 @@ func TestThreadUnsafeSet_Insert(t *testing.T) {
 	})
 
 	t.Run("insert existing item", func(t *testing.T) {
-		s := newThreadUnsafeSet(1, 2, 3)
+		s := newThreadSafeSet(1, 2, 3)
 		initialSize := s.Size()
 		s.Insert(2)
 		if s.Size() != initialSize {
@@ -87,7 +87,7 @@ func TestThreadUnsafeSet_Insert(t *testing.T) {
 	})
 
 	t.Run("multiple inserts", func(t *testing.T) {
-		s := newThreadUnsafeSet[int]()
+		s := newThreadSafeSet[int]()
 		items := []int{1, 2, 3, 4, 5}
 		for _, item := range items {
 			s.Insert(item)
@@ -103,10 +103,10 @@ func TestThreadUnsafeSet_Insert(t *testing.T) {
 	})
 }
 
-func TestThreadUnsafeSet_Remove(t *testing.T) {
+func TestThreadSafeSet_Remove(t *testing.T) {
 	t.Run("remove existing item", func(t *testing.T) {
 		items := []int{3, 4, 5, 6, 7}
-		s := newThreadUnsafeSet(items...)
+		s := newThreadSafeSet(items...)
 
 		// Ensure the set contains some items
 		if s.Size() != len(items) {
@@ -132,7 +132,7 @@ func TestThreadUnsafeSet_Remove(t *testing.T) {
 
 	t.Run("try to remove a non-existing item", func(t *testing.T) {
 		items := []int{3, 4, 5, 6, 7}
-		s := newThreadUnsafeSet(items...)
+		s := newThreadSafeSet(items...)
 
 		// Ensure the set contains some items
 		if s.Size() != len(items) {
@@ -158,9 +158,9 @@ func TestThreadUnsafeSet_Remove(t *testing.T) {
 
 }
 
-func TestThreadUnsafeSet_Size(t *testing.T) {
+func TestThreadSafeSet_Size(t *testing.T) {
 	t.Run("empty set", func(t *testing.T) {
-		s := newThreadUnsafeSet[int]()
+		s := newThreadSafeSet[int]()
 		if s.Size() != 0 {
 			t.Errorf("expected size 0, got %d", s.Size())
 		}
@@ -168,14 +168,14 @@ func TestThreadUnsafeSet_Size(t *testing.T) {
 
 	t.Run("with some items", func(t *testing.T) {
 		items := []int{3, 4, 5}
-		s := newThreadUnsafeSet(items...)
+		s := newThreadSafeSet(items...)
 		if s.Size() != len(items) {
 			t.Fatalf("expected size: %d, actual size: %d", len(items), s.Size())
 		}
 	})
 
 	t.Run("after modifications", func(t *testing.T) {
-		s := newThreadUnsafeSet(1, 2, 3)
+		s := newThreadSafeSet(1, 2, 3)
 		if s.Size() != 3 {
 			t.Errorf("expected initial size 3, got %d", s.Size())
 		}
@@ -190,25 +190,25 @@ func TestThreadUnsafeSet_Size(t *testing.T) {
 	})
 }
 
-func TestThreadUnsafeSet_IsEmpty(t *testing.T) {
+func TestThreadSafeSet_IsEmpty(t *testing.T) {
 	t.Run("empty set", func(t *testing.T) {
-		s := newThreadUnsafeSet[int]()
+		s := newThreadSafeSet[int]()
 		if !s.IsEmpty() {
 			t.Errorf("set should be empty, but it's not")
 		}
 	})
 
 	t.Run("non-empty set", func(t *testing.T) {
-		s := newThreadUnsafeSet(3, 4, 5)
+		s := newThreadSafeSet(3, 4, 5)
 		if s.IsEmpty() {
 			t.Errorf("set should be non-empty, but it's not")
 		}
 	})
 }
 
-func TestThreadUnsafeSet_Clear(t *testing.T) {
+func TestThreadSafeSet_Clear(t *testing.T) {
 	t.Run("clear empty set", func(t *testing.T) {
-		s := newThreadUnsafeSet[int]()
+		s := newThreadSafeSet[int]()
 		s.Clear()
 		if !s.IsEmpty() {
 			t.Errorf("expected set to remain empty after clear")
@@ -220,7 +220,7 @@ func TestThreadUnsafeSet_Clear(t *testing.T) {
 
 	t.Run("clear non-empty set", func(t *testing.T) {
 		items := []int{3, 4, 5}
-		s := newThreadUnsafeSet(items...)
+		s := newThreadSafeSet(items...)
 		if s.IsEmpty() || s.Size() != len(items) {
 			t.Fatalf("expected size: %d, actual size: %d", len(items), s.Size())
 		}
@@ -236,9 +236,9 @@ func TestThreadUnsafeSet_Clear(t *testing.T) {
 	})
 }
 
-func TestThreadUnsafeSet_ToSlice(t *testing.T) {
+func TestThreadSafeSet_ToSlice(t *testing.T) {
 	t.Run("empty set", func(t *testing.T) {
-		s := newThreadUnsafeSet[int]()
+		s := newThreadSafeSet[int]()
 		slice := s.ToSlice()
 		if len(slice) != 0 {
 			t.Errorf("expected empty slice, got length %d", len(slice))
@@ -246,7 +246,7 @@ func TestThreadUnsafeSet_ToSlice(t *testing.T) {
 	})
 
 	t.Run("single item", func(t *testing.T) {
-		s := newThreadUnsafeSet(42)
+		s := newThreadSafeSet(42)
 		slice := s.ToSlice()
 		if len(slice) != 1 {
 			t.Errorf("expected slice length 1, got %d", len(slice))
@@ -258,7 +258,7 @@ func TestThreadUnsafeSet_ToSlice(t *testing.T) {
 
 	t.Run("multiple items", func(t *testing.T) {
 		items := []int{1, 2, 3, 4, 5}
-		s := newThreadUnsafeSet(items...)
+		s := newThreadSafeSet(items...)
 		slice := s.ToSlice()
 
 		if len(slice) != len(items) {
@@ -279,7 +279,7 @@ func TestThreadUnsafeSet_ToSlice(t *testing.T) {
 	})
 
 	t.Run("after modifications", func(t *testing.T) {
-		s := newThreadUnsafeSet(1, 2, 3)
+		s := newThreadSafeSet(1, 2, 3)
 		s.Insert(4)
 		s.Remove(2)
 
@@ -308,7 +308,7 @@ func TestThreadUnsafeSet_ToSlice(t *testing.T) {
 	})
 
 	t.Run("slice independence", func(t *testing.T) {
-		s := newThreadUnsafeSet(1, 2, 3)
+		s := newThreadSafeSet(1, 2, 3)
 		slice := s.ToSlice()
 
 		// Modify the returned slice

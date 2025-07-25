@@ -14,10 +14,14 @@ vet:
 	@echo "Vetting code..."
 	@go vet ./...
 
-check: fmt vet test
+race:
+	@echo "Running race detector..."
+	@go test -race ./...
+
+check: fmt vet test race
 
 clean:
 	@echo "Cleaning..."
 	@go clean
 
-.PHONY: build test fmt vet check clean
+.PHONY: build test fmt vet race check clean
